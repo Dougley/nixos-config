@@ -58,6 +58,10 @@
 
   programs.kdeconnect.enable = true;
 
+  # KDE Partition Manager needs a root helper via polkit, so it can't run as
+  # a Flatpak. This option installs it natively with the kpmcore helper wired up.
+  programs.partition-manager.enable = true;
+
   # AppImages expect FHS paths. binfmt wires appimage-run in as their kernel
   # interpreter, so AppImages managed by GearLever launch directly.
   programs.appimage = {
@@ -145,23 +149,25 @@
       "com.unity.UnityHub"
       "org.godotengine.Godot"
 
-      # KDE applications.
-      "org.kde.gwenview"
+      # KDE applications. Loosely mirrored after Fedora.
       "org.kde.okular"
       "org.kde.kate"
       "org.kde.kcalc"
-      "org.kde.kclock"
-      "org.kde.kweather"
+      "org.kde.kcharselect"
+      "org.kde.kwalletmanager5"
+      "org.kde.filelight"
+      "org.kde.kfind"
+      "org.kde.kolourpaint"
       "org.kde.kamoso"
-      "org.kde.keysmith"
-      "org.kde.kid3"
       "org.kde.kleopatra"
       "org.kde.kontact"
       "org.kde.merkuro"
       "org.kde.krdc"
       "org.kde.marknote"
       "org.kde.skanpage"
-      "org.kde.CrowTranslate"
+      "org.kde.kmahjongg"
+      "org.kde.kmines"
+      "org.kde.kpat"
 
       # Productivity and utilities.
       "org.libreoffice.LibreOffice"

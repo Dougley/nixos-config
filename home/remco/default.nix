@@ -418,10 +418,20 @@
     # Development; devshells pin Node versions
     nodejs_latest
     pnpm
-    uv
     cmake
     kubectl
     kubernetes-helm
+
+    # Python. The bare interpreter covers ad-hoc scripting; projects go
+    # through uv, which owns the venv/lockfile lifecycle:
+    #   uv init && uv add <pkg>   # per-project venv + pyproject + uv.lock
+    #   uv run <script.py>        # runs inside the project venv
+    #   uvx <tool>                # one-off tools, replaces pipx
+    #   uv python install 3.12    # extra interpreter versions; the
+    #                             # standalone builds run thanks to nix-ld
+    # Avoid `pip install` outside a venv; on NixOS it fails by design.
+    python3
+    uv
 
     # AI tooling
     # Numtide/llm-agents.nix provides cached, daily-refreshed harnesses.
