@@ -1,4 +1,9 @@
-{ config, pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   imports = [
@@ -403,7 +408,10 @@
     SSH_AUTH_SOCK = "$HOME/.1password/agent.sock";
     PNPM_HOME = "$HOME/.local/share/pnpm";
   };
-  home.sessionPath = [ "$HOME/.local/bin" "$HOME/.local/share/pnpm/bin" ];
+  home.sessionPath = [
+    "$HOME/.local/bin"
+    "$HOME/.local/share/pnpm/bin"
+  ];
 
   home.packages = with pkgs; [
     # CLI; base.nix supplies ripgrep, fd, jq, and htop

@@ -1,4 +1,9 @@
-{ inputs, pkgs, lib, ... }:
+{
+  inputs,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -67,7 +72,11 @@
   users.users.remco = {
     isNormalUser = true;
     description = "Remco"; # Display name in Plasma and SDDM.
-    extraGroups = [ "wheel" "networkmanager" "docker" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "docker"
+    ];
     shell = pkgs.zsh;
     # Set a password on first boot with `passwd`. A declarative password can
     # use hashedPassword; the SOPS example below shows the setup.
