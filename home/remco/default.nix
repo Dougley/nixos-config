@@ -190,7 +190,7 @@
       };
 
       directory = {
-        format = " ";
+        format = "[$path](bold $style)[$read_only]($read_only_style) ";
         truncation_length = 2;
         style = "fg:directory";
         read_only_style = "fg:directory";
@@ -214,13 +214,13 @@
       };
 
       git_branch = {
-        format = "via  ";
+        format = "via [$symbol$branch]($style) ";
         style = "bold fg:git";
         symbol = " ";
       };
 
       git_status = {
-        format = "";
+        format = "[ $all_status$ahead_behind ]($style)";
         style = "fg:text_color bg:git";
         disabled = true;
       };
@@ -235,7 +235,7 @@
 
       # The backslash keeps ${raw} literal for Starship.
       nodejs = {
-        format = "";
+        format = "[ $symbol$version ]($style)";
         style = "bg:node fg:text_light";
         symbol = " ";
         version_format = "\${raw}";
@@ -246,14 +246,14 @@
       # ''${ } produces a literal ${ }.
       python = {
         disabled = false;
-        format = "";
+        format = ''[ ''${symbol}''${pyenv_prefix}(''${version})( \($virtualenv\)) ]($style)'';
         symbol = " ";
         version_format = "\${raw}";
         style = "bg:python fg:text_light";
       };
 
       conda = {
-        format = "";
+        format = "[ $symbol$environment ]($style)";
         style = "bg:conda fg:text_light";
         ignore_base = false;
         disabled = false;
@@ -261,7 +261,7 @@
       };
 
       java = {
-        format = "";
+        format = "[ $symbol$version ]($style)";
         style = "bg:java fg:text_light";
         version_format = "\${raw}";
         symbol = " ";
@@ -269,7 +269,7 @@
       };
 
       c = {
-        format = "";
+        format = "[ $symbol($version(-$name)) ]($style)";
         style = "bg:clang fg:text_light";
         symbol = " ";
         version_format = "\${raw}";
@@ -277,7 +277,7 @@
       };
 
       rust = {
-        format = "";
+        format = "[ $symbol$version ]($style)";
         style = "bg:rust fg:text_light";
         symbol = " ";
         version_format = "\${raw}";
