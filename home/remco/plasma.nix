@@ -24,4 +24,13 @@
     #
     # kwin.effects.translucency.enable = true;
   };
+
+  programs.konsole = {
+    enable = true;
+    defaultProfile = "NixOS";
+    profiles.NixOS.font = {
+      name = "JetBrainsMono Nerd Font Mono";
+      size = 10;
+    };
+  };
 }

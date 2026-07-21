@@ -99,8 +99,7 @@
       "app.drey.Warp"
       "au.stevetech.yafi"
       "com.github.tchx84.Flatseal"
-      # EasyEffects is configured through Home Manager with Framework 13
-      # speaker presets.
+      # EasyEffects and its output preset are configured through Home Manager.
       "com.system76.Popsicle"
       "io.github.flattool.Warehouse"
       "io.github.getnf.embellish"

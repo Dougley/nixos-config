@@ -155,7 +155,7 @@
       username = {
         style_user = "bold os";
         style_root = "bold os_admin";
-        format = "[  $user](fg:$style) ";
+        format = "[  $user](fg:$style) ";
         disabled = false;
         show_always = true;
       };
@@ -166,21 +166,21 @@
         style = "bold blue";
         disabled = true;
         symbols = {
-          Alpine = " ";
-          Arch = " ";
-          Debian = " ";
-          EndeavourOS = " ";
-          Fedora = " ";
-          Linux = " ";
-          Macos = " ";
-          Manjaro = " ";
-          Mint = " ";
-          NixOS = " ";
-          openSUSE = " ";
-          Pop = " ";
-          SUSE = " ";
-          Ubuntu = " ";
-          Windows = " ";
+          Alpine = " ";
+          Arch = " ";
+          Debian = " ";
+          EndeavourOS = " ";
+          Fedora = " ";
+          Linux = " ";
+          Macos = " ";
+          Manjaro = " ";
+          Mint = " ";
+          NixOS = " ";
+          openSUSE = " ";
+          Pop = " ";
+          SUSE = " ";
+          Ubuntu = " ";
+          Windows = " ";
         };
       };
 
@@ -190,14 +190,14 @@
       };
 
       directory = {
-        format = "[$path](bold $style)[$read_only]($read_only_style) ";
+        format = " ";
         truncation_length = 2;
         style = "fg:directory";
         read_only_style = "fg:directory";
         before_repo_root_style = "fg:directory";
         truncation_symbol = "…/";
         truncate_to_repo = true;
-        read_only = "  ";
+        read_only = "  ";
       };
 
       time = {
@@ -208,26 +208,26 @@
       };
 
       cmd_duration = {
-        format = "took [ $duration]($style) ";
+        format = "took [ $duration]($style) ";
         style = "bold fg:duration";
         min_time = 500;
       };
 
       git_branch = {
-        format = "via [$symbol$branch]($style) ";
+        format = "via  ";
         style = "bold fg:git";
-        symbol = " ";
+        symbol = " ";
       };
 
       git_status = {
-        format = "[ $all_status$ahead_behind ]($style)";
+        format = "";
         style = "fg:text_color bg:git";
         disabled = true;
       };
 
       docker_context = {
         disabled = true;
-        symbol = " ";
+        symbol = " ";
       };
 
       package.disabled = true;
@@ -235,9 +235,9 @@
 
       # The backslash keeps ${raw} literal for Starship.
       nodejs = {
-        format = "[ $symbol$version ]($style)";
+        format = "";
         style = "bg:node fg:text_light";
-        symbol = " ";
+        symbol = " ";
         version_format = "\${raw}";
         disabled = false;
       };
@@ -246,40 +246,40 @@
       # ''${ } produces a literal ${ }.
       python = {
         disabled = false;
-        format = ''[ ''${symbol}''${pyenv_prefix}(''${version})( \($virtualenv\)) ]($style)'';
-        symbol = " ";
+        format = "";
+        symbol = " ";
         version_format = "\${raw}";
         style = "bg:python fg:text_light";
       };
 
       conda = {
-        format = "[ $symbol$environment ]($style)";
+        format = "";
         style = "bg:conda fg:text_light";
         ignore_base = false;
         disabled = false;
-        symbol = " ";
+        symbol = " ";
       };
 
       java = {
-        format = "[ $symbol$version ]($style)";
+        format = "";
         style = "bg:java fg:text_light";
         version_format = "\${raw}";
-        symbol = " ";
+        symbol = " ";
         disabled = true;
       };
 
       c = {
-        format = "[ $symbol($version(-$name)) ]($style)";
+        format = "";
         style = "bg:clang fg:text_light";
-        symbol = " ";
+        symbol = " ";
         version_format = "\${raw}";
         disabled = true;
       };
 
       rust = {
-        format = "[ $symbol$version ]($style)";
+        format = "";
         style = "bg:rust fg:text_light";
-        symbol = " ";
+        symbol = " ";
         version_format = "\${raw}";
         disabled = true;
       };

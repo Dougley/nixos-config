@@ -34,7 +34,7 @@ secrets/            sops-nix encrypted secrets (recipients in .sops.yaml)
   nix-flatpak (`uninstallUnmanaged = true`; the list in `desktop.nix` *is*
   the installed set). Native exceptions where sandboxing breaks things:
   Firefox and 1Password (browser integration), Steam (drivers/gamescope),
-  easyeffects (runs as a service with Framework 13 speaker presets)
+  easyeffects (runs as a service with the Cab's_20Fav output preset)
 
 ## Install (fresh disk)
 
@@ -122,8 +122,124 @@ host key; no key material in the store.
 
 ## Adding a host
 
-1. `mkdir hosts/<name>`, write `default.nix` + `hardware.nix` (+ `disko.nix`)
-2. Add `<name> = mkHost "<name>";` to `flake.nix`
-3. Import only the modules that apply
-4. `ssh-to-age` the new host key into `.sops.yaml`, then
-   `sops updatekeys secrets/secrets.yaml`
+Each host is a directory under `hosts/` plus one line in `flake.nix`.
+Use [hosts/kyurem/](hosts/kyurem/) as the reference; it carries the full
+laptop setup (secure boot, TPM2 unlock, hibernation, snapper), most of
+which a new host can skip.
+
+### 1. Create `hosts/<name>/`
+
+Three files:
+
+- `default.nix` — the entry point: flake module imports, hostname,
+  users, home-manager wiring, host-specific services
+- `hardware.nix` — from `nixos-generate-config --no-filesystems
+  --show-hardware-config`: kernel modules, microcode, `nixpkgs.hostPlatform`.
+  Leave out `fileSystems` entries when disko provides them
+- `disko.nix` — optional but recommended: the declarative disk layout.
+  Without it, keep the generated `fileSystems` in `hardware.nix` instead
+
+A minimal `default.nix`:
+
+```nix
+{ inputs, pkgs, ... }:
+
+{
+  imports = [
+    inputs.disko.nixosModules.disko
+    inputs.home-manager.nixosModules.home-manager
+    inputs.sops-nix.nixosModules.sops
+    # Check github:NixOS/nixos-hardware for a profile matching the machine.
+
+    ./hardware.nix
+    ./disko.nix
+
+    ../../modules/base.nix
+  ];
+
+  networking.hostName = "<name>";
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  users.users.remco = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "networkmanager" ];
+    shell = pkgs.zsh;
+    initialPassword = "changeme";
+  };
+  programs.zsh.enable = true;
+
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    extraSpecialArgs = { inherit inputs; };
+    users.remco = import ../../home/remco;
+  };
+
+  sops.defaultSopsFile = ../../secrets/secrets.yaml;
+
+  # The NixOS release this host was first installed with; never bump it.
+  system.stateVersion = "25.11";
+}
+```
+
+Note that `home/remco/` assumes a desktop (plasma-manager, easyeffects,
+GUI apps); a headless host wants a slimmed-down home config or none.
+
+### 2. Register it in `flake.nix`
+
+```nix
+nixosConfigurations = {
+  kyurem = mkHost "kyurem";
+  <name> = mkHost "<name>";
+};
+```
+
+`mkHost` hardcodes `x86_64-linux`; an aarch64 host needs the helper
+extended with a system argument.
+
+### 3. Pick modules
+
+Import only what applies from `modules/`:
+
+| Module | Import when |
+|---|---|
+| `base.nix` | always — nix settings, ssh, zram, core CLI |
+| `desktop.nix` | the machine has a screen — Plasma 6, pipewire, flatpaks |
+| `laptop.nix` | it's a laptop — fwupd, fprintd, power/lid handling |
+| `containers.nix` | you want podman + distrobox |
+
+Everything intentionally *not* in a shared module lives in the host's
+`default.nix` — secure boot, snapshots, tailscale, 1Password — so copy
+over the blocks from `hosts/kyurem/default.nix` that apply.
+
+### 4. Wire up secrets
+
+sops-nix decrypts with the host's SSH key, which only exists once the
+host is installed (or you pre-generate one):
+
+```sh
+# On the new host (or against a pre-generated key):
+nix shell nixpkgs#ssh-to-age -c ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub
+```
+
+Add the printed `age1...` key as a new anchor in [.sops.yaml](.sops.yaml)
+and to the `creation_rules` key group, then re-encrypt:
+
+```sh
+sops updatekeys secrets/secrets.yaml
+```
+
+Until this is done, activation on the new host can't decrypt secrets —
+on a fresh install, expect to install first, then rekey and rebuild.
+
+### 5. Build and install
+
+```sh
+# Evaluation + build check from any machine, no switching:
+nix build .#nixosConfigurations.<name>.config.system.build.toplevel
+
+# Fresh machine: follow "Install (fresh disk)" above with .#<name>,
+# skipping the sbctl steps unless the host uses lanzaboote.
+```
